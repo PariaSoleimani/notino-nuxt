@@ -1,0 +1,31 @@
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc / OS
+.DS_Store
+
+# Local env files (keep only example in git)
+.env
+.env.*
+!.env.example
+
+# IDEs / editors
+.vscode
+.idea
+*.iml
+
+# Temp dirs
+.temp
+.tmp
