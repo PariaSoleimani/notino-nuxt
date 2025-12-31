@@ -33,7 +33,7 @@
 				</div>
 			</div>
 
-			<div class="flex-1 flex items-center justify-center text-zinc-800">
+			<div class="flex-1 flex items-center justify-center text-zinc-800 px-3">
 				<div class="w-full max-w-md">
 					<Form :title="formTitle" :mode="mode" @submit="handleSubmit" @toggle-mode="toggleMode" :loading="loading"
 						:error="error" v-model="formData" />

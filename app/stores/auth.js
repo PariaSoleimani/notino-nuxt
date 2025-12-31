@@ -67,8 +67,7 @@ export const useAuthStore = defineStore('auth', () => {
 
 	const logout = async () => {
 		loading.value = true;
-		error.value = '';
-		
+
 		try {
 			await $fetch('/api/auth/logout', { method: 'POST' });
 		} finally {
