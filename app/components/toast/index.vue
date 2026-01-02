@@ -1,5 +1,5 @@
 <template>
-	<div class="fixed bottom-12 right-10 z-1000 flex flex-col gap-y-4">
+	<div class="fixed top-12 right-10 z-1000 flex flex-col gap-y-4">
 		<div v-for="item in notifications" :key="item.id"
 			class="flex min-w-60 max-w-80 items-start justify-between gap-x-2 rounded-xl shadow-sm px-2 py-3 group relative"
 			:class="typeClass(item.type)">
@@ -28,6 +28,8 @@ const typeClass = type => {
 			return 'bg-green-50 text-green-600';
 		case 'error':
 			return 'text-red-500 bg-red-50';
+		case 'info':
+			return 'text-orange-500 bg-orange-50';
 		default:
 			return 'bg-zinc-50 text-zinc-500';
 	}
@@ -38,7 +40,9 @@ const typeIcon = type => {
 		case 'success':
 			return 'fluent:checkmark-24-regular';
 		case 'error':
-			return 'fluent:error-24-regular';
+			return 'fluent:error-circle-24-regular';
+		case 'info':
+			return 'fluent:info-24-regular';
 		default:
 			return '';
 	}

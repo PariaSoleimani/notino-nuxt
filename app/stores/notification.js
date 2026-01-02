@@ -34,14 +34,18 @@ export const useNotificationsStore = defineStore('notifications', () => {
 	};
 
 	const error = message => {
-		return push({ type: 'error', message, timeout: 4000 });
+		return push({ type: 'error', message });
 	};
 
+	const info = message => {
+		return push({ type: 'info', message });
+	};
 	return {
 		notifications,
 
 		push,
 		success,
 		error,
+		info
 	};
 });

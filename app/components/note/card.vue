@@ -1,6 +1,6 @@
 <template>
 	<NuxtLink
-		class="flex flex-col p-3 rounded-md gap-y-1.5 w-64 min-h-58 flex-1 max-h-64 hover:scale-105 hover:-rotate-1 duration-200 transition-all relative text-zinc-700"
+		class="flex flex-col p-3 rounded-md gap-y-1.5 w-full min-h-58 flex-1 max-h-64 hover:scale-105 hover:-rotate-1 duration-200 transition-all relative text-zinc-700"
 		:style="{ backgroundColor: note?.color || defaultColor }" :to="`/notes/${note.folder_id}/${note.id}`">
 		<!-- NOTE TITLE -->
 		<h3 v-if="note?.title" class="font-semibold line-clamp-2">

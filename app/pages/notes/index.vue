@@ -69,7 +69,7 @@
 
 						<ul class="flex overflow-x-auto py-3.5 pr-68 snap-x snap-mandatory scrollbar-hidden"
 							:ref="(el) => setCarouselRef(folder.id, el)">
-							<li v-for="note in folder.notes" :key="note.id" class="snap-start px-3">
+							<li v-for="note in folder.notes" :key="note.id" class="snap-start px-3 w-68 shrink-0">
 								<NoteCard :note="{ ...note, folder_id: folder.id }" />
 							</li>
 						</ul>

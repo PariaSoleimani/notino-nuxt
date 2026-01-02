@@ -4,9 +4,10 @@ export const useNoteStore = defineStore('notes', () => {
 	const folders = ref([]);
 	const loading = ref(true);
 	const error = ref(null);
+	const isSubmitting = ref(false);
 
 	const allNotes = computed(() =>
-		folders.value.flatMap(folder => folder.notes),
+		folders.value.flatMap(folder => folder.notes || []),
 	);
 
 	const favoriteNotes = computed(() =>
@@ -48,10 +49,13 @@ export const useNoteStore = defineStore('notes', () => {
 
 	// CREATE NOTES
 	const addNote = async formData => {
-		loading.value = true;
-		error.value = null;
+		isSubmitting.value = true;
+		const folderId = formData?.folder_id;
 
-		const folderId = formData.folder_id;
+		if (!folderId) {
+			notifications.error('Failed to create note. Try again please.');
+			return;
+		}
 
 		try {
 			const newNote = await $fetch('/api/notes', {
@@ -62,41 +66,43 @@ export const useNoteStore = defineStore('notes', () => {
 			const selectedFolder = findFolder(folderId);
 			if (selectedFolder) {
 				selectedFolder.notes.unshift(newNote);
-				notifications.success('a new note was added');
+				notifications.success('A new note was added.');
 			} else {
-				notifications.error('Failed to create note. Try again');
+				notifications.error('Failed to create a note. Try again.');
 			}
-		} catch (err) {
-			error.value = err;
+		} catch {
 			notifications.error('Failed to create note. Try again');
 		} finally {
-			loading.value = false;
+			isSubmitting.value = false;
 		}
 	};
 
-	// EDIT NOTE
+	// UPDATE NOTE
 	const updateNote = async (id, patch) => {
-		const note = findNote(id);
-		if (!note) {
-			notifications.error('Note not found');
+		isSubmitting.value = true;
+
+		const selectedNote = findNote(id);
+		if (!selectedNote) {
+			notifications.error('Failed to edit note. Try again please.');
 			return;
 		}
 
-		const prev = { ...note };
-		Object.assign(note, patch); // optimistic
+		const prev = { ...selectedNote };
+		Object.assign(selectedNote, patch);
 
 		try {
 			const updated = await $fetch(`/api/notes/${id}`, {
 				method: 'PATCH',
 				body: patch,
 			});
-			Object.assign(note, updated);
+
+			Object.assign(selectedNote, updated);
 			notifications.success('Note updated');
-			// return updated;
-		} catch (err) {
-			// Object.assign(note, prev); // rollback
+		} catch {
+			Object.assign(selectedNote, prev);
 			notifications.error('Failed to update note');
-			error.value = err.message;
+		} finally {
+			isSubmitting.value = false;
 		}
 	};
 
@@ -114,17 +120,17 @@ export const useNoteStore = defineStore('notes', () => {
 		try {
 			await $fetch(`/api/notes/${id}`, { method: 'DELETE' });
 
-			notifications.success('Note deleted successfully');
-		} catch (err) {
+			notifications.info('Note was deleted.');
+		} catch {
 			notifications.error('Failed to delete note. Try again');
 			folders.value = prev;
-			error.value = err.message;
 		}
 	};
 
 	// TOGGLE FAVORITE
 	const toggleFavorite = async id => {
 		const note = findNote(id);
+
 		if (!note) {
 			notifications.error('Failed to star note. Try again');
 			return;
@@ -140,12 +146,8 @@ export const useNoteStore = defineStore('notes', () => {
 			});
 
 			Object.assign(note, updated);
-			// const folder = folders.value.find(folder => folder.id === note.folder_id);
-			// const i = folder.notes.findIndex(n => n.id === note.id);
-			// folder.notes[i] = updated;
-		} catch (err) {
+		} catch {
 			note.is_favorite = prevValue;
-			error.value = err.message;
 			notifications.error('Failed to star note. Try again');
 		}
 	};
@@ -178,6 +180,7 @@ export const useNoteStore = defineStore('notes', () => {
 		archivedNotes,
 		loading,
 		error,
+		isSubmitting,
 
 		fetchNotes,
 		addNote,
