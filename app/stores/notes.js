@@ -6,6 +6,15 @@ export const useNoteStore = defineStore('notes', () => {
 	const error = ref(null);
 	const isSubmitting = ref(false);
 
+	const activityTime = n => new Date(n.updated_at || n.created_at).getTime();
+
+	const sortFolderNotes = folderId => {
+		const folder = findFolder(folderId);
+		if (!folder) return;
+
+		folder.notes.sort((a, b) => activityTime(b) - activityTime(a));
+	};
+
 	const allNotes = computed(() =>
 		folders.value.flatMap(folder => folder.notes || []),
 	);
@@ -96,6 +105,7 @@ export const useNoteStore = defineStore('notes', () => {
 				body: patch,
 			});
 
+			sortFolderNotes(updated.folder_id)
 			Object.assign(selectedNote, updated);
 			notifications.success('Note updated');
 		} catch {

@@ -40,7 +40,7 @@
 
 						<ul class="flex overflow-x-auto py-3.5 pr-68 snap-x snap-mandatory scrollbar-hidden"
 							:ref="(el) => setCarouselRef('favorites', el)">
-							<li v-for="note in favoriteNotes" :key="note.id" class="snap-start px-3">
+							<li v-for="note in favoriteNotes" :key="note.id" class="snap-start w-84 shrink-0 px-3">
 								<NoteCard :note="note" />
 							</li>
 						</ul>

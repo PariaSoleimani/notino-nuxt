@@ -33,7 +33,7 @@
 					You have no favorite notes.
 				</div>
 
-				<ul v-else class="flex flex-wrap gap-6 p-3">
+				<ul v-else class="grid grid-cols-2 lg:grid-cols-3 gap-6 p-3">
 					<li v-for="note in favoriteNotes" :key="note.id">
 						<NoteCard :note="note" />
 					</li>
